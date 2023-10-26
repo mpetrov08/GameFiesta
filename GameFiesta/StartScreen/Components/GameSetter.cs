@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameFiesta.AllGames.CowsAndBullsGame;
+using GameFiesta.AllGames.HangmanGame;
 using GameFiesta.enums;
 using GameFiesta.Managers;
 using GameFiesta.Managers.Contracts;
@@ -51,12 +53,13 @@ namespace GameFiesta.StartScreen.Components
             Console.Clear();
             if (game == Games.CowsAndBulls)
             {
-                Console.WriteLine("You choosed Cows and Bools");
-
+                CowsAndBulls cowsAndBulls = new CowsAndBulls();
+                cowsAndBulls.Run();
             }
             else if (game == Games.Hangman)
             {
-                Console.WriteLine("You choosed Hangman");
+                Hangman hangman = new Hangman();
+                hangman.Run();
             }
             else if (game == Games.Labirinths)
             {

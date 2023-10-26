@@ -4,6 +4,9 @@ using GameFiesta.Managers;
 using Spectre.Console;
 using System.ComponentModel.Design;
 using GameFiesta.StartScreen;
+using GameFiesta.AllGames.CowsAndBullsGame.IDK;
+using GameFiesta.AllGames.CowsAndBullsGame;
+using GameFiesta.AllGames.HangmanGame;
 
 namespace GameFiesta
 {
@@ -31,6 +34,24 @@ namespace GameFiesta
             User user = new User();
             StartUpScreen start = new StartUpScreen(user);
             start.Visualize();
+
+            //Number number = new Number();
+            //number.GenerateNumber();
+            // number.PrintValue();
+
+             //Hangman hangman = new Hangman();
+             //hangman.Run();
+
+
+            //|-------|
+            //|       |
+            //|       O
+            //|      /|\
+            //|       |
+            //|      / \
+            //|
+            //|
+            //|
         }
     }
 }
