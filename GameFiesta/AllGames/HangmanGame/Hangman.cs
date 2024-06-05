@@ -3,76 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameFiesta.AllGames.Contracts;
+using GameFiesta.Languages.Contracts;
 using Spectre.Console;
 
 namespace GameFiesta.AllGames.HangmanGame
 {
-    public class Hangman
+    public class Hangman : Game
     {
         private List<string> words = new List<string>();
         private List<char> alreadyUsedLetters;
         private string[] hangmanPhases;
-        private string Word;
+        private string word;
         private string field;
-        private int Misstakes;
+        private int misstakes;
 
-        public Hangman()
+        public Hangman(ILanguage language) : base(language)
         {
             alreadyUsedLetters = new List<char>();
 
-            words = new List<string>
-            {
-                "Programmer",
-                "School",
-                "History",
-                "Plane",
-                "GitHub",
-                "Computer",
-                "Elephant",
-                "Girlfriend",
-                "Microphone",
-                "City",
-                "Capybara",
-                "Platypus",
-                "Football",
-                "PingPong",
-                "Volleyball",
-                "Chess",
-                "Book",
-                "Empire",
-                "Dumbbell",
-                "Ship",
-                "House",
-                "Monkey",
-                "Principle",
-                "Pattern",
-                "Stone",
-                "Scissors",
-                "Pistol",
-                "Snake",
-                "Browser",
-                "Competition",
-                "Fish",
-                "Country",
-                "Continent",
-                "Town",
-                "Cowboy",
-                "Chicken",
-                "Restaurant",
-                "Highway",
-                "Night",
-                "Wizzard",
-                "Lizard",
-                "Sparrow",
-                "Chameleon",
-                "Fly",
-                "Giraffe",
-                "Rhinoceros",
-                "Truck",
-                "Police",
-                "Fire",
-                "Grave"
-            };
+            words = Language.HangmanWords;
 
             hangmanPhases = new string[9]
             {
@@ -168,7 +118,7 @@ namespace GameFiesta.AllGames.HangmanGame
             };
         }
 
-        public void Run()
+        public override void Run()
         {
             GenerateWord();
             InitializeField();
@@ -177,34 +127,31 @@ namespace GameFiesta.AllGames.HangmanGame
             while (true)
             {
                 Console.Clear();
-                AnsiConsole.Write(new FigletText("Hangman").Centered().Color(Color.DarkCyan));
-                AnsiConsole.Write(new Markup("[lime]The discovered letters are:[/]"));
+                Language.PrintHangmanHeader();
+                Language.PrintHangmanDiscoveredMessage();
                 Console.WriteLine();
                 AnsiConsole.Write(new Markup($"[springgreen2]{field}[/]"));
-                if (Misstakes > 0)
+                if (misstakes > 0)
                 {
                     Console.WriteLine();
                     Console.WriteLine();
-                    AnsiConsole.Write(new Markup($"[seagreen1_1]{hangmanPhases[Misstakes - 1]}[/]"));
+                    AnsiConsole.Write(new Markup($"[seagreen1_1]{hangmanPhases[misstakes - 1]}[/]"));
                 }
 
-                Console.WriteLine();
-                Console.WriteLine();
-                AnsiConsole.Write(new Markup($"[green]You already used these wrong letters:[/] [lime]{string.Join(", ", alreadyUsedLetters)}[/]"));
-                Console.WriteLine();
-                Console.WriteLine();
-                AnsiConsole.Write(new Markup("[palegreen3_1]Write possible letter: [/]"));
+                Language.PrintHangmanWrongLettersMessage(alreadyUsedLetters);
+                Language.PrintHangmanInputMessage();
                 char letter = char.Parse(Console.ReadLine());
                 indexesOfCorrectLetters = CheckForCorrectLetter(letter);
                 
                 if (indexesOfCorrectLetters.Count == 0)
                 {
-                    if (!alreadyUsedLetters.Contains(letter))
+                    if (!alreadyUsedLetters.Contains(char.ToUpper(letter)))
                     {
-                        alreadyUsedLetters.Add(letter);
+                        alreadyUsedLetters.Add(char.ToUpper(letter));
                     }
-                    Misstakes++;
-                    if (Misstakes > 8)
+
+                    misstakes++;
+                    if (misstakes > 8)
                     {
                         break;
                     }
@@ -222,34 +169,27 @@ namespace GameFiesta.AllGames.HangmanGame
 
             if (IsWordCompleted())
             {
-                Console.Clear();
-                AnsiConsole.Write(new Markup("[yellow]CONGRATULATIONS, You completed the word![/]"));
-                Console.WriteLine();
-                AnsiConsole.Write(new Markup($"[yellow]The word was {Word}[/]"));
+                Language.PrintHangmanWinningMessage(word);
             }
             else
             {
-                Console.Clear();
-                AnsiConsole.Write(new Markup($"[yellow]{hangmanPhases[Misstakes - 1]}[/]"));
-                Console.WriteLine();
-                AnsiConsole.Write(new Markup("[yellow]Oh no, you did not guess the word![/]"));
-                Console.WriteLine();
-                AnsiConsole.Write(new Markup($"[yellow]The word was {Word}[/]"));
+                Language.PrintHangmanLoseMessage(hangmanPhases[misstakes - 1], word);
             }
 
-            Console.WriteLine();
-            AnsiConsole.Write(new Markup($"[yellow]You made: {Misstakes} Misstakes[/]"));
+            Language.PrintHangmanMisstakesMessage(misstakes);
+
+            base.ContinueOption();
         }
 
         private void GenerateWord()
         {
             Random rnd = new Random();
-            Word = words[rnd.Next(0, words.Count - 1)];
+            word = words[rnd.Next(0, words.Count - 1)];
         }
 
         private void InitializeField()
         {
-            for (int i = 0; i < Word.Length; i++)
+            for (int i = 0; i < word.Length; i++)
             {
                 field += "_ ";
             }
@@ -259,10 +199,9 @@ namespace GameFiesta.AllGames.HangmanGame
         {
             List<int> indexesOfCorrectLetters = new List<int>();
 
-            for (int i = 0; i < Word.Length; i++)
+            for (int i = 0; i < word.Length; i++)
             {
-                if (char.ToLower(letter) == Word[i] ||
-                    char.ToUpper(letter) == Word[i])
+                if (char.ToUpper(letter) == char.ToUpper(word[i]))
                 {
                     indexesOfCorrectLetters.Add(i);
                 }
@@ -276,7 +215,7 @@ namespace GameFiesta.AllGames.HangmanGame
             foreach (int index in indexesOfCorrectLetters)
             {
                 field = field.Remove(index * 2, 1);
-                field = field.Insert(index * 2, Word[index].ToString());
+                field = field.Insert(index * 2, word[index].ToString());
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using GameFiesta.AllGames.CowsAndBullsGame.IDK;
+﻿using GameFiesta.AllGames.Contracts;
+using GameFiesta.Languages.Contracts;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -8,48 +9,45 @@ using System.Threading.Tasks;
 
 namespace GameFiesta.AllGames.CowsAndBullsGame
 {
-    public class CowsAndBulls
+    public class CowsAndBulls : Game
     {
         private List<int> possibleCombination;
         private Combination correctCombination;
-        private int Cows;
-        private int Bulls;
-        private int Tryes;
+        private int cows;
+        private int bulls;
+        private int tryes;
 
-        public CowsAndBulls()
+        public CowsAndBulls(ILanguage language) : base(language)
         {
             possibleCombination = new List<int>();
             correctCombination = new Combination();
             correctCombination.GenerateCombination();
         }
 
-        public void Run()
+        public override void Run()
         {
-            AnsiConsole.Write(new FigletText("Cows And Bulls").Centered().Color(Color.Cyan1));
-            
+            Language.PrintCowsAndBullsHeader();
+
             while (true)
             {
-                AnsiConsole.Write(new Markup("[blue]Write possible combination of numbers: [/]"));
+                Language.PrintCowsAndBullsInputMessage();
                 ReadPossibleCombination();
-                Tryes++;
+                tryes++;
                 CheckForBulls();
                 CheckForCows();
 
-                if (Bulls == possibleCombination.Count)
+                if (bulls == possibleCombination.Count)
                 {
                     break;
                 }
 
                 possibleCombination.Clear();
-                AnsiConsole.Write(new Markup($"[blue]You have:[/] [red]{Bulls}B, {Cows}C[/]"));
+                Language.PrintCowsAndBullsOutputMessage(bulls, cows);
                 Console.WriteLine();
             }
 
-            AnsiConsole.Write(new Markup("[yellow]Number was: [/]"));
-            correctCombination.PrintValue();
-            AnsiConsole.Write(new Markup("[yellow]You guessed![/]"));
-            Console.WriteLine();
-            AnsiConsole.Write(new Markup($"[yellow]You tryed: {Tryes} times.[/]"));
+            Language.PrintCowsAndBullsWinningMessage(tryes, correctCombination.GetValue());
+            ContinueOption();
         }
 
         private void ReadPossibleCombination()
@@ -63,25 +61,25 @@ namespace GameFiesta.AllGames.CowsAndBullsGame
 
         private void CheckForCows()
         {
-            Cows = 0;
+            cows = 0;
             foreach (var number in possibleCombination)
             {
                 if (correctCombination.GeneratedCombination.Contains(number) 
                     && correctCombination.GeneratedCombination[possibleCombination.IndexOf(number)] != number)
                 {
-                    Cows++;
+                    cows++;
                 }
             }
         }
 
         private void CheckForBulls()
         {
-            Bulls = 0;
+            bulls = 0;
             for (int i = 0; i < possibleCombination.Count; i++)
             {
                 if (possibleCombination[i] == correctCombination.GeneratedCombination[i])
                 {
-                    Bulls++;
+                    bulls++;
                 }
             }
         }

@@ -8,6 +8,6 @@ namespace GameFiesta.Managers.Contracts
 {
     public interface IManager
     {
-        void Print();
+        void Visualize();
     }
 }

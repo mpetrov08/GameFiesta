@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Spectre.Console;
 
-namespace GameFiesta.AllGames.CowsAndBullsGame.IDK
+namespace GameFiesta.AllGames.CowsAndBullsGame
 {
     public class Combination
     {
         private int number;
 
-        public Combination() 
-        { 
-            GeneratedCombination  = new List<int>();
+        public Combination()
+        {
+            GeneratedCombination = new List<int>();
         }
 
         public List<int> GeneratedCombination { get; set; }
@@ -42,14 +42,13 @@ namespace GameFiesta.AllGames.CowsAndBullsGame.IDK
             return number;
         }
 
-        public void PrintValue()
+        public string GetValue()
         {
-            AnsiConsole.Write(new Markup($"[yellow]{string.Join("", GeneratedCombination)}[/]"));
-            Console.WriteLine();
+            return string.Join("", GeneratedCombination);
         }
 
-        private int SetValue() 
-        { 
+        private int SetValue()
+        {
             Random rnd = new Random();
             return rnd.Next(0, 9);
         }

@@ -14,6 +14,7 @@ namespace GameFiesta.StartScreen.Components
         {
             AnsiConsole.Write(new Markup("[cyan1]=============================================[/]").Centered());
             AnsiConsole.Write(new Markup("[italic blue] \"Game-Fiesta\" was made by Mihail Petrov[/]").Centered());
+            Console.WriteLine();
         }
     }
 }
