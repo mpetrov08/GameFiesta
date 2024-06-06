@@ -66,8 +66,6 @@ namespace GameFiesta.Languages
                 "Grave"
         };
 
-        //Messages used in SetUp class
-
         public void PrintBackMessage()
         {
             Console.WriteLine();
@@ -105,9 +103,6 @@ namespace GameFiesta.Languages
             Console.WriteLine();
         }
 
-        //End of messages used in SetUp class
-        
-        //Messages used in Header class
         public void PrintGameMenu()
         {
             AnsiConsole.Write(new Markup("[cornflowerblue]Click the button of your keyboard which is the same in front of the game you want to play[/]"));
@@ -263,8 +258,5 @@ namespace GameFiesta.Languages
             AnsiConsole.Write(new Markup("[yellow3_1]This is a game for two players. One plays with X and the other with O. The goal is for one of the two to have three identical pieces in a row, column or diagonal.\r\n[/]"));
             Console.WriteLine();
         }
-        //End of messages used in Header class
-
-
     }
 }
